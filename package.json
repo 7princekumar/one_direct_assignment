@@ -1,0 +1,14 @@
+{
+  "name": "one_direct_project",
+  "version": "1.0.0",
+  "description": "A product which can bookmark all the links in a user's twitter feed and store the same in a database. User can login whenever required and check all the links shared on a particular day.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Prince Kumar",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}
