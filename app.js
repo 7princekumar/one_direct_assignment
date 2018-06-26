@@ -6,11 +6,7 @@ var TwitterStrategy = require("passport-twitter");
 
 
 //TWITTER
-var Twit = require("twit");
-var config = require('./config');
-var T = new Twit(config);
-
-
+var Twitter = require('twitter');
 
 
 
@@ -34,14 +30,26 @@ passport.use(new TwitterStrategy({
     consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
     callbackURL: "https://sit-a7princekumar.c9users.io/auth/twitter/callback"
   },
-  function(token, tokenSecret, profile, cb) {
-    console.log("TOKEN: "+token);
-    console.log("TOKEN SECRET: "+tokenSecret);
-    console.log("--------------------------");
-    console.log(profile._json);
-    console.log("--------------------------");
-    return cb( null, profile );
-  }
+    function(token, tokenSecret, profile, cb) { 
+        var client = new Twitter({
+           consumer_key: process.env.TWITTER_CONSUMER_KEY,
+           consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
+           access_token_key: token,
+           access_token_secret: tokenSecret
+        });
+     
+        // var params = {screen_name: 'nodejs'};
+        client.get('statuses/user_timeline', function(error, tweets, response) {
+            if (!error) {
+                for(var i=0; i<tweets.length; i++){
+                    console.log("["+(i+1)+"]"+tweets[i].text);
+                    console.log("--------------------------");
+                }
+            }
+        });
+        
+        // return cb( null, profile );
+    }
 ));
 
 
@@ -75,16 +83,6 @@ app.post("/", function(req, res){
     var twitter_user_id = req.body.twitter_user_id;
     console.log("Username: "+twitter_user_id);
     
-    T.get('statuses/home_timeline', function(err, data, response){
-        if(err){
-            console.log(err.message);
-        }else{
-            // for(var i=0; i<data.length; i++){
-            //     console.log(data[i].text);       
-            // }
-            console.log("Timeline received.");
-        }
-    });
 });
 
 
