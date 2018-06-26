@@ -1,9 +1,11 @@
 var express = require("express");
 var app = express();
 
+app.set("view engine", "ejs");
+
 //Routes
 app.get("/", function(req, res){
-    res.send("Hello");
+    res.render("home");
 });
 
 //listener
