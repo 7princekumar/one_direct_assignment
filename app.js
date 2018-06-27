@@ -5,8 +5,17 @@ var passport = require("passport");
 var TwitterStrategy = require("passport-twitter");
 
 
-//TWITTER
-var Twitter = require('twitter');
+//TWITTER-OAUTH
+var OAuth = require('oauth');
+var oauth = new OAuth.OAuth(
+      'https://api.twitter.com/oauth/request_token',
+      'https://api.twitter.com/oauth/access_token',
+      process.env.TWITTER_CONSUMER_KEY,
+      process.env.TWITTER_CONSUMER_SECRET,
+      '1.0A',
+      null,
+      'HMAC-SHA1'
+    );
 
 
 
@@ -28,22 +37,21 @@ passport.use(new TwitterStrategy({
     callbackURL: "https://sit-a7princekumar.c9users.io/auth/twitter/callback",
   },
     function(token, tokenSecret, profile, cb) { 
-        var client = new Twitter({
-           consumer_key: process.env.TWITTER_CONSUMER_KEY,
-           consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
-           access_token_key: token,
-           access_token_secret: tokenSecret
-        });
-     
-        var params = {
-            count: "100",
-            tweet_mode: "extended",
-        };
-        client.get('statuses/home_timeline', function(error, tweets, response) {
-            if (!error) {
-                console.log(tweets);
-            }
-        });
+        var screen_name = profile.username;
+        var count = 100;
+        oauth.get(
+            'https://api.twitter.com/1.1/statuses/home_timeline.json?tweet_mode=extended&screen_name=' + screen_name + '&count='+count,
+            token, //test user token
+            tokenSecret, //test user secret            
+            function (e, data, res){
+                if (e) console.error(e);  
+                var data_length = JSON.parse(data).length;
+                for(var i=0; i<data_length; i++){
+                    if((JSON.parse(data)[i].entities.urls).length != 0){
+                        console.log(i+":::"+JSON.parse(data)[i].entities.urls[0].expanded_url);
+                    }
+                }
+            });    
         
         return cb(null, profile);
     }
