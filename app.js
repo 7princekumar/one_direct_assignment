@@ -4,6 +4,22 @@ var bodyParser = require("body-parser");
 var passport = require("passport");
 var TwitterStrategy = require("passport-twitter");
 
+//DB Setup
+var mongoose = require('mongoose');
+var url = "mongodb://7princekumar:hellofriend1@ds121251.mlab.com:21251/onedirectdb"; //in-case, env is not set up.
+mongoose.connect(url);
+
+//SCHEMA
+var tweetSchema = new mongoose.Schema({
+    tweet_owner_name:       String,
+    created_at:        String,
+    tweet_id:          String,
+    tweet_content_url: String,
+});
+
+
+//MODELS
+
 
 //TWITTER-OAUTH
 var OAuth = require('oauth');
@@ -37,18 +53,47 @@ passport.use(new TwitterStrategy({
     callbackURL: "https://sit-a7princekumar.c9users.io/auth/twitter/callback",
   },
     function(token, tokenSecret, profile, cb) { 
-        var screen_name = profile.username;
-        var count = 100;
+        var twitter_username = profile.username;
+        var Table = mongoose.model(twitter_username, tweetSchema, twitter_username); //collection-name, schema, forced-collection-name
+        // console.log(profile);
+        var count = 50;
         oauth.get(
-            'https://api.twitter.com/1.1/statuses/home_timeline.json?tweet_mode=extended&screen_name=' + screen_name + '&count='+count,
+            'https://api.twitter.com/1.1/statuses/home_timeline.json?tweet_mode=extended&count='+count,
             token, //test user token
             tokenSecret, //test user secret            
             function (e, data, res){
-                if (e) console.error(e);  
+                if (e) console.error(e); 
+                
                 var data_length = JSON.parse(data).length;
                 for(var i=0; i<data_length; i++){
                     if((JSON.parse(data)[i].entities.urls).length != 0){
-                        console.log(i+":::"+JSON.parse(data)[i].entities.urls[0].expanded_url);
+                        // console.log(i+":::"+JSON.parse(data)[i].entities.urls[0].expanded_url);
+                        // console.log(JSON.parse(data)[i]);
+                        Table.findOne({tweet_id: JSON.parse(data)[i].id_str}, function(err, found_tweet) {
+                            if(err){
+                                console.log(err);
+                            }else{
+                                //insert if not
+                                if(!found_tweet){
+                                    console.log("Not found");
+                                }
+                            }
+                        });
+                        
+                        
+                        Table.create({
+                            tweet_owner_name:  JSON.parse(data)[i].user.name,
+                            created_at:        JSON.parse(data)[i].created_at,
+                            tweet_id:          JSON.parse(data)[i].id_str,
+                            tweet_content_url: JSON.parse(data)[i].entities.urls[0].expanded_url,
+                        }, function(err, saved_tweet){
+                            if(err){
+                                console.log(err);
+                            }else{
+                                console.log("****");
+                                console.log(saved_tweet);   
+                            }
+                        });
                     }
                 }
             });    
@@ -98,7 +143,11 @@ app.post("/", function(req, res){
 
 
 
-
+app.get("/logout", function(req, res){
+    req.logout();
+    req.session.destroy();
+    res.redirect('/');
+});
 
 
 //listener
