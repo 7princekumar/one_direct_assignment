@@ -65,8 +65,8 @@ passport.use(new TwitterStrategy({
     function(token, tokenSecret, profile, cb) { 
         var twitter_username = profile.username;
         //validate
-        if(entered_username != twitter_username){
-            console.log("Invalid username. Try logging out from twitter first.");
+        if(entered_username.toLowerCase() != twitter_username.toLowerCase()){
+            console.log("Given username did not match. Try logging out from twitter first.");
         }else{
             var Table = mongoose.model(twitter_username, tweetSchema, twitter_username); //collection-name, schema, forced-collection-name
             // console.log(profile);
