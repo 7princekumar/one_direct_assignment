@@ -19,16 +19,13 @@ app.use(require("express-session")({
     saveUninitialized: false
 }));
 
-//SETUP Passport
-app.use(passport.initialize());
-app.use(passport.session());
 
 
 //Configure stratergy
 passport.use(new TwitterStrategy({
     consumerKey: process.env.TWITTER_CONSUMER_KEY,
     consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
-    callbackURL: "https://sit-a7princekumar.c9users.io/auth/twitter/callback"
+    callbackURL: "https://sit-a7princekumar.c9users.io/auth/twitter/callback",
   },
     function(token, tokenSecret, profile, cb) { 
         var client = new Twitter({
@@ -38,22 +35,30 @@ passport.use(new TwitterStrategy({
            access_token_secret: tokenSecret
         });
      
-        // var params = {screen_name: 'nodejs'};
-        client.get('statuses/user_timeline', function(error, tweets, response) {
+        var params = {
+            count: "100",
+            tweet_mode: "extended",
+        };
+        client.get('statuses/home_timeline', function(error, tweets, response) {
             if (!error) {
-                for(var i=0; i<tweets.length; i++){
-                    console.log("["+(i+1)+"]"+tweets[i].text);
-                    console.log("--------------------------");
-                }
+                console.log(tweets);
             }
         });
         
-        // return cb( null, profile );
+        return cb(null, profile);
     }
 ));
 
 
-
+//SETUP Passport
+app.use(passport.initialize());
+app.use(passport.session());
+passport.serializeUser(function(user, cb){
+   cb(null, user); 
+});
+passport.deserializeUser(function(user, cb){
+   cb(null, user); 
+});
 
 
 //Routes
@@ -69,13 +74,11 @@ app.get('/auth/twitter',
 
 
 //handle authentication-callback
-app.get('/auth/twitter/callback', 
-  passport.authenticate('twitter', { failureRedirect: '/login' }),
+app.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/login' }),
   function(req, res) {
     // Successful authentication, redirect home.
     res.redirect('/');
-  }
-);
+  });
 
 
 //handle user-input
