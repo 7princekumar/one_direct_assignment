@@ -61,7 +61,7 @@ passport.use(new TwitterStrategy({
         var twitter_username = profile.username;
         var Table = mongoose.model(twitter_username, tweetSchema, twitter_username); //collection-name, schema, forced-collection-name
         // console.log(profile);
-        var count = 5;
+        var count = 10;
         oauth.get(
             'https://api.twitter.com/1.1/statuses/home_timeline.json?tweet_mode=extended&count='+count,
             token, //test user token
@@ -75,7 +75,7 @@ passport.use(new TwitterStrategy({
 
                         var newTweet = new Table({
                             tweet_owner_name:  (JSON.parse(data))[i].user['name'],
-                            created_at:        (JSON.parse(data))[i].user['created_at'],
+                            created_at:        (JSON.parse(data))[i].created_at,
                             tweet_id:          (JSON.parse(data))[i].user['id'],
                             tweet_content_url: ((JSON.parse(data))[i].entities['urls'][0])['expanded_url']
                         });
