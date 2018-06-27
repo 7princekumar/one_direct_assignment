@@ -4,6 +4,11 @@ var bodyParser = require("body-parser");
 var passport = require("passport");
 var TwitterStrategy = require("passport-twitter");
 
+
+//
+var entered_username = "";
+
+
 //DB Setup
 var mongoose = require('mongoose');
 var url = "mongodb://7princekumar:hellofriend1@ds121251.mlab.com:21251/onedirectdb"; //in-case, env is not set up.
@@ -59,33 +64,38 @@ passport.use(new TwitterStrategy({
   },
     function(token, tokenSecret, profile, cb) { 
         var twitter_username = profile.username;
-        var Table = mongoose.model(twitter_username, tweetSchema, twitter_username); //collection-name, schema, forced-collection-name
-        // console.log(profile);
-        var count = 10;
-        oauth.get(
-            'https://api.twitter.com/1.1/statuses/home_timeline.json?tweet_mode=extended&count='+count,
-            token, //test user token
-            tokenSecret, //test user secret            
-            function (e, data, res){
-                if (e) console.error(e); 
-                
-                var data_length = JSON.parse(data).length;
-                for(var i=0; i<data_length; i++){
-                    if((JSON.parse(data)[i].entities.urls).length != 0){
-
-                        var newTweet = new Table({
-                            tweet_owner_name:  (JSON.parse(data))[i].user['name'],
-                            created_at:        (JSON.parse(data))[i].created_at,
-                            tweet_id:          (JSON.parse(data))[i].user['id'],
-                            tweet_content_url: ((JSON.parse(data))[i].entities['urls'][0])['expanded_url']
-                        });
-                        
-                        newTweet.save()
-                            .then(() => console.log('Saved new-data!'))
-                            .catch(err => {console.log("Duplicate data, not saved!"); });
+        //validate
+        if(entered_username != twitter_username){
+            console.log("Invalid username. Try logging out from twitter first.");
+        }else{
+            var Table = mongoose.model(twitter_username, tweetSchema, twitter_username); //collection-name, schema, forced-collection-name
+            // console.log(profile);
+            var count = 10; //max 200
+            oauth.get(
+                'https://api.twitter.com/1.1/statuses/home_timeline.json?tweet_mode=extended&count='+count,
+                token, //test user token
+                tokenSecret, //test user secret            
+                function (e, data, res){
+                    if (e) console.error(e); 
+                    
+                    var data_length = JSON.parse(data).length;
+                    for(var i=0; i<data_length; i++){
+                        if((JSON.parse(data)[i].entities.urls).length != 0){
+    
+                            var newTweet = new Table({
+                                tweet_owner_name:  (JSON.parse(data))[i].user['name'],
+                                created_at:        (JSON.parse(data))[i].created_at,
+                                tweet_id:          (JSON.parse(data))[i].user['id'],
+                                tweet_content_url: ((JSON.parse(data))[i].entities['urls'][0])['expanded_url']
+                            });
+                            
+                            newTweet.save()
+                                .then(() => console.log('Saved new-data!'))
+                                .catch(err => {console.log("Duplicate data, not saved!"); });
+                        }
                     }
-                }
-            });    
+                });    
+        }
         
         return cb(null, profile);
     }
@@ -125,9 +135,9 @@ app.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedi
 
 //handle user-input
 app.post("/", function(req, res){
-    var twitter_user_id = req.body.twitter_user_id;
-    console.log("Username: "+twitter_user_id);
-    
+    entered_username = req.body.entered_username;
+    console.log("Username: "+entered_username);
+    res.redirect('/auth/twitter');
 });
 
 
