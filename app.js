@@ -77,7 +77,7 @@ passport.use(new TwitterStrategy({
             message = "";
             var Table = mongoose.model(twitter_username, tweetSchema, twitter_username); //collection-name, schema, forced-collection-name
             table_name = Table;
-            var count = 20; //max 200
+            var count = 200; //max 200
             
             oauth.get(
                 'https://api.twitter.com/1.1/statuses/home_timeline.json?tweet_mode=extended&count='+count,
