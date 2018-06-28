@@ -1,23 +1,69 @@
 <html>
   <head>
     <title>One Direct Assignment Project</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.5.0/css/mdb.min.css" rel="stylesheet">
+    
+    
   </head>
  
   <body>
     
     <h1>SHOW PAGE</h1>
-    <% for(var i=0; i<twitter_data.length; i++){ %>
-    <p>
-        tweet_owner_name: <%=twitter_data[i].tweet_owner_name%><br>
-        created_at:       <%=twitter_data[i].created_at%><br>
-        tweet_id:         <%=twitter_data[i].tweet_id%><br>
-        tweet_content_url:<%=twitter_data[i].tweet_content_url%><br>
-    </p>
-    <hr>
-    <% } %>
     
     
     
+    
+    
+    <!--Table-->
+    <table class="table table-striped">
+    
+        <!--Table head-->
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>From</th>
+                <th>Time Stamp</th>
+                <th>Tweet Id</th>
+                <th>Url</th>
+            </tr>
+        </thead>
+        <!--Table head-->
+        
+        
+        <!--Table body-->
+        <tbody>
+            <% for(var i=0; i<twitter_data.length; i++){ %>
+            <tr>
+                <th scope="row"><%=i+1%></th>
+                <td><%=twitter_data[i].tweet_owner_name%></td>
+                <td><%=twitter_data[i].created_at%></td>
+                <td><%=twitter_data[i].tweet_id%></td>
+                <td><a><%=twitter_data[i].tweet_content_url%></a></td>
+            </tr>
+            <% } %>
+        </tbody>
+        <!--Table body-->
+
+    </table>
+    <!--Table-->
+    
+
+
+    
+    
+    <!-- JQuery -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Bootstrap tooltips -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.13.0/umd/popper.min.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.5.0/js/mdb.min.js"></script>
     
     
   </body>
