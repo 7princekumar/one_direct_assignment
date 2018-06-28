@@ -13,7 +13,7 @@
  
   <body>
     
-    <h1>Bookmarked URLs</h1>
+    <h1>Dashboard</h1>
     <!--<div class="container">-->
     <div class="card">
     <div class="card-body">
@@ -41,10 +41,10 @@
                 <% for(var i=0; i<twitter_data.length; i++){ %>
                 <tr>
                     <th scope="row"><%=i+1%></th>
-                    <td><a href="https://twitter.com/<%=twitter_data[i].tweet_owner_name%>">@<%=twitter_data[i].tweet_owner_name%></a></td>
+                    <td><a id="user_name" href="https://twitter.com/<%=twitter_data[i].tweet_owner_name%>">@<%=twitter_data[i].tweet_owner_name%></a></td>
                     <td><%=twitter_data[i].created_at%></td>
                     <td><%=twitter_data[i].tweet_id%></td>
-                    <td><a href="<%=twitter_data[i].tweet_content_url%>"><%=twitter_data[i].tweet_content_url%></a></td>
+                    <td><a id="url_link" href="<%=twitter_data[i].tweet_content_url%>"><%=twitter_data[i].tweet_content_url%></a></td>
                 </tr>
                 <% } %>
             </tbody>
