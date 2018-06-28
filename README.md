@@ -10,8 +10,9 @@ A product which can bookmark all the links in a user's twitter feed and store th
 
 ### Installing Prerequisites
 ```
-npm installation : https://www.npmjs.com/get-npm
-mongodb installation : https://docs.mongodb.com/manual/installation/ 
+node installation: https://nodejs.org/en/
+mongodb installation : https://docs.mongodb.com/manual/installation/
+npm installation: https://www.npmjs.com/get-npm
 ```
 
 
