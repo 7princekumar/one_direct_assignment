@@ -7,6 +7,9 @@ var TwitterStrategy = require("passport-twitter");
 
 //
 var entered_username = "";
+var twitter_username = "";
+var table_name = "";
+var twitter_data = {};
 
 
 //DB Setup
@@ -63,14 +66,15 @@ passport.use(new TwitterStrategy({
     callbackURL: "https://sit-a7princekumar.c9users.io/auth/twitter/callback",
   },
     function(token, tokenSecret, profile, cb) { 
-        var twitter_username = profile.username;
+        twitter_username = profile.username;
         //validate
         if(entered_username.toLowerCase() != twitter_username.toLowerCase()){
             console.log("Given username did not match. Try logging out from twitter first.");
         }else{
             var Table = mongoose.model(twitter_username, tweetSchema, twitter_username); //collection-name, schema, forced-collection-name
-            // console.log(profile);
-            var count = 10; //max 200
+            table_name = Table;
+            var count = 15; //max 200
+            
             oauth.get(
                 'https://api.twitter.com/1.1/statuses/home_timeline.json?tweet_mode=extended&count='+count,
                 token, //test user token
@@ -128,10 +132,21 @@ app.get('/auth/twitter',
 //handle authentication-callback
 app.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/login' }),
   function(req, res) {
-    // Successful authentication, redirect home.
-    res.redirect('/');
+    // Successful authentication, redirect to show-page.
+    res.redirect('/show');
   });
 
+
+app.get("/show", function(req, res){
+    table_name.find({}, function(err, tweets){
+       if(err){
+           console.log(err);
+       }else{
+           console.log(tweets);
+           res.render("show", {twitter_data:tweets});
+       }
+   });
+});
 
 //handle user-input
 app.post("/", function(req, res){
@@ -139,6 +154,7 @@ app.post("/", function(req, res){
     console.log("Username: "+entered_username);
     res.redirect('/auth/twitter');
 });
+
 
 
 
