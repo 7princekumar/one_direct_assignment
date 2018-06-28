@@ -38,6 +38,19 @@ Visit the following link in your browser
 localhost:3000
 ```
 
+## Screenshots
 
+```
+Form
+```
+![image](https://user-images.githubusercontent.com/16738083/42029840-7e0de4a0-7aee-11e8-9aaf-7dde4b7f50b8.png)
 
+```
+Twitter Authorisation
+```
+![image](https://user-images.githubusercontent.com/16738083/42029931-be01232e-7aee-11e8-9f76-cda2472f0999.png)
 
+```
+Dashboard
+```
+![image](https://user-images.githubusercontent.com/16738083/42029933-c352143c-7aee-11e8-805c-14deb1f8605c.png)
