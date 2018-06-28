@@ -150,7 +150,7 @@ app.get("/show", function(req, res){
                res.redirect("/show");
                return;
            }
-           res.render("show", {twitter_data:tweets});
+           res.render("show", {twitter_data:tweets, name: twitter_username});
        }
    });
    

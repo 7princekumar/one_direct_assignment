@@ -10,10 +10,19 @@ h1 {
     color: white;
 }
 
+span {
+    color: white;
+    font-size: 15px;
+}
+
 #url_link {
     text-decoration: underline;
 }
 
 #user_name {
     color: #734b6d
+}
+
+#current_user {
+    color: white;
 }
