@@ -12,6 +12,7 @@ var entered_username = "";
 var twitter_username = "";
 var table_name = "";
 var twitter_data = {};
+var message = "";
 
 
 //DB Setup
@@ -33,7 +34,6 @@ var tweetSchema = new mongoose.Schema({
 });
 
 
-//MODELS
 
 
 //TWITTER-OAUTH
@@ -72,8 +72,9 @@ passport.use(new TwitterStrategy({
         //validate
         if(entered_username.toLowerCase() != twitter_username.toLowerCase()){
             console.log("Given username did not match. Try logging out from twitter first.");
-            
+            message = "Given username did not match. Try logging out from twitter first.";
         }else{
+            message = "";
             var Table = mongoose.model(twitter_username, tweetSchema, twitter_username); //collection-name, schema, forced-collection-name
             table_name = Table;
             var count = 20; //max 200
@@ -123,7 +124,7 @@ passport.deserializeUser(function(user, cb){
 //Routes
 //HOME
 app.get("/", function(req, res){
-    res.render("home");
+    res.render("home", {message:message});
 });
 
 
@@ -170,12 +171,6 @@ app.post("/", function(req, res){
 
 
 
-
-app.get("/logout", function(req, res){
-    req.logout();
-    req.session.destroy();
-    res.redirect('/');
-});
 
 
 //listener
