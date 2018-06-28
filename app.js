@@ -72,6 +72,7 @@ passport.use(new TwitterStrategy({
         //validate
         if(entered_username.toLowerCase() != twitter_username.toLowerCase()){
             console.log("Given username did not match. Try logging out from twitter first.");
+            
         }else{
             var Table = mongoose.model(twitter_username, tweetSchema, twitter_username); //collection-name, schema, forced-collection-name
             table_name = Table;
@@ -140,6 +141,10 @@ app.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedi
 
 var flag = true;
 app.get("/show", function(req, res){
+    if(table_name == ""){
+        res.redirect("/");
+        return;
+    }
     table_name.find({}, function(err, tweets){
        if(err){
            console.log(err);
