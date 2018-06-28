@@ -5,7 +5,9 @@ var passport = require("passport");
 var TwitterStrategy = require("passport-twitter");
 
 
-//
+app.use(express.static(__dirname + '/public'));
+
+//variables
 var entered_username = "";
 var twitter_username = "";
 var table_name = "";
@@ -87,7 +89,7 @@ passport.use(new TwitterStrategy({
                         if((JSON.parse(data)[i].entities.urls).length != 0){
     
                             var newTweet = new Table({
-                                tweet_owner_name:  (JSON.parse(data))[i].user['name'],
+                                tweet_owner_name:  (JSON.parse(data))[i].user['screen_name'],
                                 created_at:        (JSON.parse(data))[i].created_at,
                                 tweet_id:          (JSON.parse(data))[i].user['id'],
                                 tweet_content_url: ((JSON.parse(data))[i].entities['urls'][0])['expanded_url']
