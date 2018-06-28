@@ -7,7 +7,13 @@
     
     <h1>SHOW PAGE</h1>
     <% for(var i=0; i<twitter_data.length; i++){ %>
-        <p></p><%=twitter_data[i].tweet_content_url%></p>
+    <p>
+        tweet_owner_name: <%=twitter_data[i].tweet_owner_name%><br>
+        created_at:       <%=twitter_data[i].created_at%><br>
+        tweet_id:         <%=twitter_data[i].tweet_id%><br>
+        tweet_content_url:<%=twitter_data[i].tweet_content_url%><br>
+    </p>
+    <hr>
     <% } %>
     
     

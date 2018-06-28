@@ -73,7 +73,7 @@ passport.use(new TwitterStrategy({
         }else{
             var Table = mongoose.model(twitter_username, tweetSchema, twitter_username); //collection-name, schema, forced-collection-name
             table_name = Table;
-            var count = 15; //max 200
+            var count = 20; //max 200
             
             oauth.get(
                 'https://api.twitter.com/1.1/statuses/home_timeline.json?tweet_mode=extended&count='+count,
@@ -136,16 +136,22 @@ app.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedi
     res.redirect('/show');
   });
 
-
+var flag = true;
 app.get("/show", function(req, res){
     table_name.find({}, function(err, tweets){
        if(err){
            console.log(err);
        }else{
            console.log(tweets);
+           if(flag){
+               flag = false;
+               res.redirect("/show");
+               return;
+           }
            res.render("show", {twitter_data:tweets});
        }
    });
+   
 });
 
 //handle user-input
