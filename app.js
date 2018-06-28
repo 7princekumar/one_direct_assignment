@@ -59,7 +59,7 @@ app.use(require("express-session")({
     saveUninitialized: false
 }));
 
-console.log(process.env.CALLBACK_URL);
+console.log("Visit: localhost:3000");
 
 //Configure stratergy
 passport.use(new TwitterStrategy({
