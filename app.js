@@ -59,13 +59,13 @@ app.use(require("express-session")({
     saveUninitialized: false
 }));
 
-
+console.log(process.env.CALLBACK_URL);
 
 //Configure stratergy
 passport.use(new TwitterStrategy({
     consumerKey: process.env.TWITTER_CONSUMER_KEY,
     consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
-    callbackURL: "https://sit-a7princekumar.c9users.io/auth/twitter/callback",
+    callbackURL: process.env.CALLBACK_URL,
   },
     function(token, tokenSecret, profile, cb) { 
         twitter_username = profile.username;
@@ -139,6 +139,7 @@ app.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedi
     // Successful authentication, redirect to show-page.
     res.redirect('/show');
   });
+
 
 var flag = true;
 app.get("/show", function(req, res){
